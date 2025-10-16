@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.Python
+venv/
+env/
+.env
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+.DS_Store
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
