@@ -60,3 +60,38 @@ memory.save_context(
 )
 
 print("\n✅ Study Assistant initalized with memory!\n")
+
+# Main conversation loop
+
+def chat_with_assistant(user_input):
+  """Process user input and return assistant response."""
+  response = study_chain.invoke({"input": user_input})
+  return response["response"]
+
+def main():
+
+  while True:
+    #Get user input
+    user_input = input("🧐You: ").strip()
+
+    if user_input.lower() in ["exit", "quit", "q"]:
+      print("👋 Goodluck with your studies!")
+      print("\n📊 Session Summary:")
+      print(f"Total conversation length: {len(memory.buffer)} characters")
+      break
+
+    # Skip empty input
+    if not user_input:
+      continue
+
+    # Get response from assistant
+    try:
+      response = chat_with_assistant(user_input)
+      print(f"🤖 Study Assistant: {response}\n")
+
+    except Exception as e:
+        print(f"❌ Error: {e}")
+        print("Please try again.\n")
+
+if __name__ == "__main__":
+  main()
