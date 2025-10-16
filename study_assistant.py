@@ -4,6 +4,7 @@ from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationChain
 from langchain.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
+from langchain import LLMChain
 import os
 from dotenv import load_dotenv
 
@@ -88,6 +89,101 @@ def main():
     try:
       response = chat_with_assistant(user_input)
       print(f"🤖 Study Assistant: {response}\n")
+
+    except Exception as e:
+        print(f"❌ Error: {e}")
+        print("Please try again.\n")
+
+if __name__ == "__main__":
+  main()
+
+# Create specialized chains for different tasks
+
+# Quiz Chain
+quiz_template= PromptTemplate(
+  input_variables=["topic", "conversation_history"],
+  template="""Based on this conversation about {topic}:
+{conversation_history}
+
+Create 3 quiz questions that test understadning of the key concepts discussed.
+Format:
+Q1: [question
+Q2: [question]
+Q3: [question]
+
+Quiz Questions:"""
+)
+
+quiz_chain = LLMChain(llm=llm, prompt=quiz_template)
+
+# Explanation Chain
+explain_template = PromptTemplate(
+  input_variables=["topic"],
+  template="""Explain {topic} in the simple terms for a student.
+
+  Include:
+  1. Simple definition
+  2. Real-world example
+  3. Why it's important
+
+  Explanation:"""
+  )
+
+explain_chain = LLMChain(llm=llm, prompt=explain_template)
+
+def process_special_commands(user_input):
+  """Handle special commands like 'quiz me' and 'explain [topic]'."""
+
+  # Quiz Command
+  if "quiz me" in user_input.lower():
+    #Extract what they want to be quizzed on from memory
+    history = memory.buffer
+
+    # Get the last mentioned topic (simple approach)
+    response = quiz_chain.invoke({
+      "topic": "the subject we've discussed",
+      "conversation_history": history[-500:]  # Last 500 chars
+    })
+
+    return response["text"]
+
+  # Explain command
+  elif user_input.lower().startswith("explain "):
+    topic = user_input[8:].strip() # Remove "explain " prefix
+
+    response = explain_chain.invoke({"topic": topic})
+    return response["text"]
+
+  # Regular conversation
+  else:
+    return None
+
+# Update the main() function
+def main():
+  print("💬 Start chatting! (Type 'exit' to quit)\n")
+
+  while True:
+    user_input = input("🧐You: ").strip()
+
+    if user_input.lower() in ['exit', 'quit', 'bye']:
+       print("\n👋 Good luck with your studies!")
+       print("\n📊 Session Summary:")
+       print(f"Conversation history:\n{memory.buffer[:200]}...")
+       break
+
+    if not user_input:
+        continue
+
+    try:
+      # Check for special commands first
+      special_response = process_special_commands(user_input)
+
+      if special_response:
+        print(f"🤖 Study Assistant: {special_response}\n")
+      else:
+        # Regular conversation with memory
+        response = chat_with_assistant(user_input)
+        print(f"🤖 Study Assistant: {response}\n")
 
     except Exception as e:
         print(f"❌ Error: {e}")
