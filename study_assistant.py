@@ -11,8 +11,7 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-#Setup
-
+# Setup OpenAI API key
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 print("🎓 Welcome to Your AI Study Assistant!")
 print("=" * 40)
