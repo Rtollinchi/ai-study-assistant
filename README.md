@@ -207,8 +207,8 @@ Potential improvements for this project:
 **Rubin Tollinchi**
 
 - GitHub: [@Rtollinchi](https://github.com/Rtollinchi)
-- LinkedIn: [Your LinkedIn](https://www.linkedin.com/in/rubintollinchi/)
-- Portfolio: [Your Website](https://rubintollinchi.info/)
+- LinkedIn: [LinkedIn](https://www.linkedin.com/in/rubintollinchi/)
+- Portfolio: [Website](https://rubintollinchi.info/)
 
 ## 🙏 Acknowledgments
 
